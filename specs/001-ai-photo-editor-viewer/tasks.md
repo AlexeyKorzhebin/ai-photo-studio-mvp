@@ -10,7 +10,7 @@ Dependency: foundation endpoints already exist; this stream should complete befo
 - [x] Implement search semantics: split query by whitespace, AND across terms, case-insensitive substring across filename/tags/notes (`backend/app/api/routes.py`).
 - [x] Implement deterministic sorting tie-breaker with secondary `id` for all supported sort keys (`backend/app/api/routes.py`).
 - [ ] Return explicit user-correctable validation errors for missing prompt, invalid size, invalid quality params where applicable (`backend/app/schemas/image.py`, `backend/app/api/routes.py`).
-- [ ] Add generation response metadata required by plan/data model (`seed_hash`, mock flag) and persist fields if needed (`backend/app/models/image.py`, `backend/app/schemas/image.py`, `backend/app/api/routes.py`).
+- [x] Add generation response metadata required by plan/data model (`seed_hash`, mock flag) and persist fields if needed (`backend/app/models/image.py`, `backend/app/schemas/image.py`, `backend/app/api/routes.py`).
 
 Parallelization:
 - This workstream can run in parallel with Workstream D (editor UX polish) and Workstream E (docs/runtime corrections).
@@ -20,8 +20,8 @@ Dependency: can start now; final API contract assertions should align with Works
 
 - [x] Keep local storage collision-safe with unique stored filenames (`backend/app/services/storage.py`).
 - [x] Keep upload type restrictions and empty-file rejection (`backend/app/services/storage.py`).
-- [ ] Normalize deterministic mock seed inputs to include (`prompt`, `size`, `style`, `provider_override`) and keep output stable for identical normalized input (`backend/app/services/ai_providers.py`).
-- [ ] Ensure deterministic metadata is returned and stored for generated assets (`backend/app/services/ai_providers.py`, `backend/app/models/image.py`, `backend/app/api/routes.py`).
+- [x] Normalize deterministic mock seed inputs to include (`prompt`, `size`, `style`, `provider_override`) and keep output stable for identical normalized input (`backend/app/services/ai_providers.py`).
+- [x] Ensure deterministic metadata is returned and stored for generated assets (`backend/app/services/ai_providers.py`, `backend/app/models/image.py`, `backend/app/api/routes.py`).
 - [ ] Verify upload/generate DB+file writes remain all-or-nothing at request level; add rollback handling if needed (`backend/app/api/routes.py`, `backend/app/services/storage.py`).
 
 Parallelization:
@@ -69,7 +69,7 @@ Dependency: execute after corresponding implementation tasks land.
 - [x] Keep baseline API tests for health/upload/list/generate present (`backend/tests/test_api.py`).
 - [x] Add tests for whitespace-split AND search semantics and deterministic tie-break sorting (`backend/tests/test_api.py`).
 - [ ] Add tests for generation `size` enum validation and clear error responses (`backend/tests/test_api.py`).
-- [ ] Add deterministic mock tests asserting stable bytes/metadata for identical normalized inputs and changed hash on input deltas (`backend/tests/test_api.py`, `backend/app/services/ai_providers.py`).
+- [x] Add deterministic mock tests asserting stable bytes/metadata for identical normalized inputs and changed hash on input deltas (`backend/tests/test_api.py`, `backend/app/services/ai_providers.py`).
 - [ ] Add tests for duplicate filename uploads producing distinct stored files/records (`backend/tests/test_api.py`).
 
 ### Frontend verification

@@ -86,6 +86,55 @@ def test_ai_generate_mock(client):
     payload = resp.json()
     assert payload["image"]["source_type"] == "generated"
     assert payload["provider_used"] in {"mock", "gpt-image"}
+    assert isinstance(payload["seed_hash"], str)
+    assert payload["image"]["seed_hash"] == payload["seed_hash"]
+
+
+def test_ai_generate_deterministic_metadata_is_stable_for_identical_normalized_input(client):
+    req = {
+        "prompt": "  red   sunset over  water ",
+        "size": "1024x1024",
+        "style": "  cinematic  ",
+        "provider": "  gpt-image ",
+    }
+
+    first = client.post("/api/ai/generate", json=req)
+    second = client.post("/api/ai/generate", json=req)
+    assert first.status_code == 200
+    assert second.status_code == 200
+
+    first_payload = first.json()
+    second_payload = second.json()
+    assert first_payload["seed_hash"] == second_payload["seed_hash"]
+    assert first_payload["image"]["seed_hash"] == second_payload["image"]["seed_hash"]
+    assert first_payload["image"]["is_mock"] is True
+    assert second_payload["image"]["is_mock"] is True
+    assert first_payload["fallback_used"] is True
+    assert second_payload["fallback_used"] is True
+
+
+def test_ai_generate_deterministic_metadata_changes_with_input_delta(client):
+    base = {
+        "prompt": "red sunset over water",
+        "size": "1024x1024",
+        "style": "cinematic",
+        "provider": "gpt-image",
+    }
+    changed_style = {
+        "prompt": "red sunset over water",
+        "size": "1024x1024",
+        "style": "natural",
+        "provider": "gpt-image",
+    }
+
+    base_resp = client.post("/api/ai/generate", json=base)
+    changed_resp = client.post("/api/ai/generate", json=changed_style)
+    assert base_resp.status_code == 200
+    assert changed_resp.status_code == 200
+
+    base_seed = base_resp.json()["seed_hash"]
+    changed_seed = changed_resp.json()["seed_hash"]
+    assert base_seed != changed_seed
 
 
 def test_ai_generate_invalid_size_returns_422(client):

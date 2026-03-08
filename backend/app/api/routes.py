@@ -31,6 +31,8 @@ def to_out(image: ImageAsset) -> ImageOut:
         source_type=image.source_type,
         provider=image.provider,
         prompt=image.prompt,
+        is_mock=image.is_mock,
+        seed_hash=image.seed_hash,
         tags=image.tags,
         notes=image.notes,
         created_at=image.created_at,
@@ -139,7 +141,7 @@ def generate_image(payload: AIGenerateIn, db: Session = Depends(get_db)) -> AIGe
     }
     width, height = size_to_dimensions[payload.size]
     provider = resolve_provider(payload.provider)
-    result = provider.generate(payload.prompt, width, height, payload.style)
+    result = provider.generate(payload.prompt, payload.size, width, height, payload.style, payload.provider)
     stored_name, size_bytes, width, height = storage.save_generated(result.image_bytes, result.mime_type)
 
     image = ImageAsset(
@@ -152,9 +154,16 @@ def generate_image(payload: AIGenerateIn, db: Session = Depends(get_db)) -> AIGe
         source_type="generated",
         provider=result.provider_used,
         prompt=payload.prompt,
+        is_mock=result.is_mock,
+        seed_hash=result.seed_hash,
     )
     db.add(image)
     db.commit()
     db.refresh(image)
 
-    return AIGenerateOut(image=to_out(image), provider_used=result.provider_used, fallback_used=result.fallback_used)
+    return AIGenerateOut(
+        image=to_out(image),
+        provider_used=result.provider_used,
+        fallback_used=result.fallback_used,
+        seed_hash=result.seed_hash,
+    )

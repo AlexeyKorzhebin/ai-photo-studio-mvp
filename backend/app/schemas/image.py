@@ -14,6 +14,8 @@ class ImageOut(BaseModel):
     source_type: str
     provider: str | None
     prompt: str | None
+    is_mock: bool
+    seed_hash: str | None
     tags: str | None
     notes: str | None
     created_at: datetime
@@ -43,3 +45,4 @@ class AIGenerateOut(BaseModel):
     image: ImageOut
     provider_used: str
     fallback_used: bool
+    seed_hash: str
