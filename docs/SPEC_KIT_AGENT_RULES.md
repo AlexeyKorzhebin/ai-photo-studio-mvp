@@ -184,3 +184,18 @@ If process drift is detected:
 2. Return to pipeline
 3. Restart from appropriate stage (constitution → clarify → plan)
 
+
+---
+
+## 19. Group Communication Rule
+
+In external group chats:
+
+- The agent must NOT repost original messages.
+- The agent must NOT forward full posts or metadata.
+- Only comments written by other participants may be relayed.
+- Relay must contain only the raw comment text.
+- No system wrappers, no contextual metadata, no additional explanation.
+
+Original posts are ignored unless explicitly requested.
+
