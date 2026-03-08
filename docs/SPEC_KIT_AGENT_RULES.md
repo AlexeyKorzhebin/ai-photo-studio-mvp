@@ -199,3 +199,34 @@ In external group chats:
 
 Original posts are ignored unless explicitly requested.
 
+
+---
+
+## 20. Executor Policy
+
+Execution policy is validated empirically:
+
+- Codex is the primary Spec-Kit executor.
+- Gemini is the fallback executor.
+- Executor switching is allowed for infrastructure reasons (limits, outages, degraded behavior).
+
+### Codex Mode
+
+Use Codex as the default executor for slash-command style Spec-Kit workflows. Codex handles strict scope-constrained prompts more naturally and is the preferred path for `/speckit.*` execution.
+
+### Gemini Modes
+
+Gemini supports two operating modes:
+
+1. **Strict mode**
+   - One-shot prompt
+   - Narrow scope
+   - Deterministic output
+   - Use for verdict-style checks (`OK` / `Requires adjustment`), tight validations, and minimal-risk passes
+
+2. **Audit mode**
+   - Wider prompt scope
+   - May inspect adjacent files
+   - Use for exploratory or deeper reviews where broader context is acceptable
+
+For deterministic workflow gates, prefer Gemini strict mode.

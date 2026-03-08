@@ -107,3 +107,41 @@ If Gemini CLI fails:
 - Suggest executor switch
 - Pause execution
 
+
+---
+
+## Gemini Operating Modes
+
+Support two modes explicitly.
+
+### Strict Mode
+
+Use strict mode when deterministic behavior is required.
+
+Pattern:
+- one-shot prompt
+- narrow file scope
+- exact output contract
+- no exploratory continuation
+
+Use for:
+- constitution verdicts
+- checklist verdicts
+- gate-style validations
+- tight acceptance checks
+
+### Audit Mode
+
+Use audit mode when broader review is useful.
+
+Pattern:
+- wider prompt scope
+- exploratory reading allowed
+- richer commentary acceptable
+
+Use for:
+- broader compliance review
+- drift detection
+- exploratory analysis
+
+Prefer strict mode for workflow gates. Use audit mode only when the wider scope is intentional.

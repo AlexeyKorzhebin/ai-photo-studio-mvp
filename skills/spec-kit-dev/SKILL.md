@@ -112,3 +112,16 @@ If Codex limit hit:
 - Suggest fallback
 - Pause execution
 
+
+---
+
+## Executor Role
+
+Use Codex as the primary Spec-Kit executor.
+
+Codex is the default path for:
+- slash-command style prompts (`/speckit.*`)
+- scope-constrained one-shot checks
+- stage-gated pipeline execution
+
+If Codex is unavailable because of limits or infrastructure issues, stop and suggest switching to the Gemini-specific skill instead of improvising inside this skill.
