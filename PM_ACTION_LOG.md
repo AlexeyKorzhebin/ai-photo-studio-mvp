@@ -10,3 +10,4 @@
 - 2026-03-08: Implementation Wave 3 completed; deterministic mock metadata aligned with backend contract and tests.
 - 2026-03-08: Operational rule added — when a wave stalls, decompose the blocked task into smaller task.md items instead of retrying the same-sized wave. Apply the same rule to verification: split testing into small controllable checks (backend, frontend, runtime, end-to-end) for delegation and progress control.
 - 2026-03-08: Re-sliced `specs/001-ai-photo-editor-viewer/tasks.md` into smaller delegation-ready work items after a stalled wave (with finer frontend metadata UI and split verification tracks).
+- 2026-03-08: Spec-Kit checklist review run after re-tasking; `specs/001-ai-photo-editor-viewer/checklist.md` updated as the active self-control gate.
