@@ -6,7 +6,7 @@ Baseline note: repository already contains a partial implementation. This backlo
 Dependency: foundation endpoints already exist; this stream should complete before frontend contract finalization in Workstream C.
 
 - [x] Keep existing API surface available: `GET /api/health`, `GET/POST/PATCH /api/images*`, `POST /api/ai/generate` (`backend/app/api/routes.py`).
-- [ ] Enforce generation input contract from width/height to `size` enum (`1024x1024|1024x1536|1536x1024`) in schemas and route handling (`backend/app/schemas/image.py`, `backend/app/api/routes.py`).
+- [x] Enforce generation input contract from width/height to `size` enum (`1024x1024|1024x1536|1536x1024`) in schemas and route handling (`backend/app/schemas/image.py`, `backend/app/api/routes.py`).
 - [ ] Implement search semantics: split query by whitespace, AND across terms, case-insensitive substring across filename/tags/notes (`backend/app/api/routes.py`).
 - [ ] Implement deterministic sorting tie-breaker with secondary `id` for all supported sort keys (`backend/app/api/routes.py`).
 - [ ] Return explicit user-correctable validation errors for missing prompt, invalid size, invalid quality params where applicable (`backend/app/schemas/image.py`, `backend/app/api/routes.py`).
@@ -31,8 +31,8 @@ Parallelization:
 Dependency: finalize after Workstream A API contract decisions are merged.
 
 - [x] Keep gallery search/sort controls wired to API query params (`frontend/src/App.tsx`, `frontend/src/components/GalleryPanel.tsx`, `frontend/src/api/client.ts`).
-- [ ] Update generation client contract to send `size` (and optional style/provider) instead of width/height (`frontend/src/api/client.ts`, `frontend/src/types.ts`).
-- [ ] Update generator UI to select allowed size values and optional style preset/custom text (`frontend/src/components/TopBar.tsx`, `frontend/src/App.tsx`).
+- [x] Update generation client contract to send `size` (and optional style/provider) instead of width/height (`frontend/src/api/client.ts`, `frontend/src/types.ts`).
+- [x] Update generator UI to select allowed size values and optional style preset/custom text (`frontend/src/components/TopBar.tsx`, `frontend/src/App.tsx`).
 - [ ] Add asset metadata editing UI for tags/notes and wire to `PATCH /api/images/{id}` (`frontend/src/components/GalleryPanel.tsx`, `frontend/src/api/client.ts`).
 - [ ] Add debounced search dispatch to reduce API churn while preserving deterministic results (`frontend/src/App.tsx`).
 - [ ] Ensure selection stability after refresh/search/sort and after generate/upload updates (`frontend/src/App.tsx`).
