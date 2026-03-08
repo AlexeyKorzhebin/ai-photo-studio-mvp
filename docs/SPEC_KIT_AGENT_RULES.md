@@ -103,3 +103,84 @@ The AI agent is an orchestrator:
 
 The agent is NOT a direct code editor.
 
+
+---
+
+## 13. Traceability
+
+Every level must be linked:
+
+- Requirement → Spec section
+- Spec section → Task (T-XXX)
+- Task → Commit
+- Commit → Checklist item
+
+There must be no:
+- Task without requirement
+- Commit without T-ID reference
+- Requirement without test
+
+---
+
+## 14. Multi-Agent Orchestration
+
+Multiple CLI agents are allowed (Codex, Gemini, Claude Code), but:
+
+- Only one execution agent per wave
+- The orchestrator selects the agent
+- Fallback is allowed only for infrastructure reasons
+
+---
+
+## 15. CLI Configuration Responsibility
+
+The AI agent is responsible for:
+
+- Model selection
+- Execution mode (one-shot / session)
+- Sandbox policy
+- Skill configuration
+- Limit monitoring
+- Execution time control
+
+The agent must:
+
+- Log reason for model switching
+- Explicitly record infrastructure failures
+- Never interpret limit exhaustion as logical failure
+
+---
+
+## 16. Performance & Budget Discipline
+
+Before each implement wave:
+
+- Estimate task complexity
+- Select appropriate model level
+- Define expected scope of changes
+
+Avoid:
+
+- Using heavy models for trivial tasks
+- Using weak models for complex decomposition
+
+---
+
+## 17. Security Gate
+
+The agent must not:
+
+- Execute destructive shell commands without confirmation
+- Modify infrastructure without explicit task
+- Perform network actions outside defined scope
+
+---
+
+## 18. Anti-Drift Protocol
+
+If process drift is detected:
+
+1. Stop implement stage
+2. Return to pipeline
+3. Restart from appropriate stage (constitution → clarify → plan)
+
