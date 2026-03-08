@@ -1,0 +1,309 @@
+openapi: 3.0.3
+info:
+  title: AI Photo Studio MVP API
+  version: 0.1.0
+  description: Local-first single-user API for upload, gallery, metadata, export, and generation.
+servers:
+  - url: http://localhost:8088/api
+paths:
+  /health:
+    get:
+      summary: Health check
+      operationId: getHealth
+      responses:
+        '200':
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /assets/upload:
+    post:
+      summary: Upload one image asset
+      operationId: uploadAsset
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageAsset'
+        '400':
+          description: Invalid file
+  /assets:
+    get:
+      summary: List assets with search and sort
+      operationId: listAssets
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          required: false
+          description: Case-insensitive search terms (AND semantics)
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [name, created_at, updated_at]
+            default: updated_at
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: Asset list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ImageAsset'
+  /assets/{assetId}:
+    get:
+      summary: Get asset details
+      operationId: getAsset
+      parameters:
+        - in: path
+          name: assetId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Asset details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageAsset'
+        '404':
+          description: Not found
+  /assets/{assetId}/metadata:
+    patch:
+      summary: Update metadata tags/notes
+      operationId: patchAssetMetadata
+      parameters:
+        - in: path
+          name: assetId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetadataPatch'
+      responses:
+        '200':
+          description: Metadata updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageMetadata'
+        '404':
+          description: Not found
+  /assets/{assetId}/binary:
+    get:
+      summary: Download original binary
+      operationId: downloadAssetBinary
+      parameters:
+        - in: path
+          name: assetId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Binary stream
+          content:
+            image/png: {}
+            image/jpeg: {}
+            image/webp: {}
+        '404':
+          description: Not found
+  /exports:
+    post:
+      summary: Export current visible state
+      operationId: createExport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+      responses:
+        '200':
+          description: Export stream
+          content:
+            image/png: {}
+            image/jpeg: {}
+            image/webp: {}
+        '400':
+          description: Invalid export request
+        '404':
+          description: Asset not found
+  /generation:
+    post:
+      summary: Generate image via provider abstraction with fallback
+      operationId: generateImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerationRequest'
+      responses:
+        '201':
+          description: Generated and ingested as asset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerationResponse'
+        '400':
+          description: Validation error
+        '502':
+          description: Provider error without fallback success
+components:
+  schemas:
+    ImageAsset:
+      type: object
+      required:
+        - id
+        - originalFilename
+        - mimeType
+        - width
+        - height
+        - byteSize
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        originType:
+          type: string
+          enum: [upload, generated]
+        originalFilename:
+          type: string
+        mimeType:
+          type: string
+          enum: [image/png, image/jpeg, image/webp]
+        width:
+          type: integer
+          minimum: 1
+        height:
+          type: integer
+          minimum: 1
+        byteSize:
+          type: integer
+          minimum: 1
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ImageMetadata:
+      type: object
+      required: [assetId, tags, notes, updatedAt]
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        tags:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+    MetadataPatch:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+    EditOperation:
+      type: object
+      required: [type, params]
+      properties:
+        type:
+          type: string
+          enum: [crop, rotate, flip, tonal, filter]
+        params:
+          type: object
+          additionalProperties: true
+    ExportRequest:
+      type: object
+      required: [assetId, operations, format]
+      properties:
+        assetId:
+          type: string
+          format: uuid
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/EditOperation'
+        format:
+          type: string
+          enum: [png, jpg, webp]
+        quality:
+          type: integer
+          minimum: 1
+          maximum: 100
+    GenerationRequest:
+      type: object
+      required: [prompt, size]
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+        size:
+          type: string
+          enum: [1024x1024, 1024x1536, 1536x1024]
+        style:
+          type: string
+        provider:
+          type: string
+    GenerationResponse:
+      type: object
+      required: [asset, providerUsed]
+      properties:
+        asset:
+          $ref: '#/components/schemas/ImageAsset'
+        providerUsed:
+          type: string
+        deterministicKey:
+          type: string
