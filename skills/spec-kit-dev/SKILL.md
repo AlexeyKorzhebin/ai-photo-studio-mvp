@@ -125,3 +125,17 @@ Codex is the default path for:
 - stage-gated pipeline execution
 
 If Codex is unavailable because of limits or infrastructure issues, stop and suggest switching to the Gemini-specific skill instead of improvising inside this skill.
+
+---
+
+## Playbook Usage
+
+When this skill is activated for an actual pipeline stage, read `codex-orchestrator.md` before constructing the command.
+
+Use it to select:
+- the current stage template
+- required pre-checks
+- expected output contract
+- abort conditions
+
+Do not improvise stage commands when a canonical playbook entry exists.

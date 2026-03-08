@@ -145,3 +145,18 @@ Use for:
 - exploratory analysis
 
 Prefer strict mode for workflow gates. Use audit mode only when the wider scope is intentional.
+
+---
+
+## Playbook Usage
+
+When this skill is activated for an actual pipeline stage, read `gemini-orchestrator.md` before constructing the command.
+
+Use it to select:
+- the current stage template
+- strict vs audit mode
+- required pre-checks
+- expected output contract
+- abort conditions
+
+Do not improvise stage commands when a canonical playbook entry exists.
