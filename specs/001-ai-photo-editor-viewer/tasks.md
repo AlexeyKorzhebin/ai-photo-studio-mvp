@@ -7,8 +7,8 @@ Dependency: foundation endpoints already exist; this stream should complete befo
 
 - [x] Keep existing API surface available: `GET /api/health`, `GET/POST/PATCH /api/images*`, `POST /api/ai/generate` (`backend/app/api/routes.py`).
 - [x] Enforce generation input contract from width/height to `size` enum (`1024x1024|1024x1536|1536x1024`) in schemas and route handling (`backend/app/schemas/image.py`, `backend/app/api/routes.py`).
-- [ ] Implement search semantics: split query by whitespace, AND across terms, case-insensitive substring across filename/tags/notes (`backend/app/api/routes.py`).
-- [ ] Implement deterministic sorting tie-breaker with secondary `id` for all supported sort keys (`backend/app/api/routes.py`).
+- [x] Implement search semantics: split query by whitespace, AND across terms, case-insensitive substring across filename/tags/notes (`backend/app/api/routes.py`).
+- [x] Implement deterministic sorting tie-breaker with secondary `id` for all supported sort keys (`backend/app/api/routes.py`).
 - [ ] Return explicit user-correctable validation errors for missing prompt, invalid size, invalid quality params where applicable (`backend/app/schemas/image.py`, `backend/app/api/routes.py`).
 - [ ] Add generation response metadata required by plan/data model (`seed_hash`, mock flag) and persist fields if needed (`backend/app/models/image.py`, `backend/app/schemas/image.py`, `backend/app/api/routes.py`).
 
@@ -67,7 +67,7 @@ Dependency: execute after corresponding implementation tasks land.
 
 ### Backend verification
 - [x] Keep baseline API tests for health/upload/list/generate present (`backend/tests/test_api.py`).
-- [ ] Add tests for whitespace-split AND search semantics and deterministic tie-break sorting (`backend/tests/test_api.py`).
+- [x] Add tests for whitespace-split AND search semantics and deterministic tie-break sorting (`backend/tests/test_api.py`).
 - [ ] Add tests for generation `size` enum validation and clear error responses (`backend/tests/test_api.py`).
 - [ ] Add deterministic mock tests asserting stable bytes/metadata for identical normalized inputs and changed hash on input deltas (`backend/tests/test_api.py`, `backend/app/services/ai_providers.py`).
 - [ ] Add tests for duplicate filename uploads producing distinct stored files/records (`backend/tests/test_api.py`).

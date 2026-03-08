@@ -6,3 +6,4 @@
 
 - 2026-03-08: Analyze phase completed; blockers/gaps classified and implementation wave is ready to start.
 - 2026-03-08: Implementation Wave 1 completed; size enum contract aligned across backend and frontend.
+- 2026-03-08: Implementation Wave 2 completed; search semantics and deterministic sorting aligned in backend with supporting tests.

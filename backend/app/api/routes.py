@@ -52,14 +52,24 @@ def list_images(
         "name": ImageAsset.filename,
     }
     column = sort_map.get(sort, ImageAsset.created_at)
-    direction = desc(column) if order.lower() == "desc" else asc(column)
+    descending = order.lower() == "desc"
+    primary_order = desc(column) if descending else asc(column)
+    secondary_order = desc(ImageAsset.id) if descending else asc(ImageAsset.id)
 
     q = db.query(ImageAsset)
     if search:
-        like = f"%{search}%"
-        q = q.filter(or_(ImageAsset.filename.ilike(like), ImageAsset.tags.ilike(like), ImageAsset.notes.ilike(like)))
+        terms = [term.strip() for term in search.split() if term.strip()]
+        for term in terms:
+            like = f"%{term}%"
+            q = q.filter(
+                or_(
+                    ImageAsset.filename.ilike(like),
+                    ImageAsset.tags.ilike(like),
+                    ImageAsset.notes.ilike(like),
+                )
+            )
 
-    items = q.order_by(direction).all()
+    items = q.order_by(primary_order, secondary_order).all()
     return ImageListOut(items=[to_out(item) for item in items])
 
 
